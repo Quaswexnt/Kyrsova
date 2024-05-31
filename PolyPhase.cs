@@ -55,11 +55,10 @@ namespace Kyrsova
             return d;
         }
 
-        public List<int> GetDistributedSeries(string mainPath, string[] helpFilePaths)
+        public List<int> GetDistributedSeries(string mainPath, string[] helpFilePaths, bool ascending)
         {
             if (!File.Exists(mainPath) || helpFilePaths.Any(path => !File.Exists(path)))
             {
-
                 return null;
             }
 
@@ -81,83 +80,91 @@ namespace Kyrsova
 
             try
             {
-                string[] fileContent = File.ReadAllLines(mainPath);
-                diskAccessCount++;
+                var fileContent = File.ReadAllLines(mainPath);
                 foreach (var line in fileContent)
                 {
                     if (int.TryParse(line, out int number))
                     {
                         input.Add(number);
                     }
-                    else
-                    {
-
-                    }
                 }
             }
             catch (Exception ex)
             {
-
                 return null;
             }
 
             try
             {
                 File.Delete(mainPath);
-                diskAccessCount++;
             }
             catch (Exception ex)
             {
-
                 return null;
             }
 
-            try
-            {
-                while (d.Any(x => x > 0) && currentIndex < input.Count)
-                {
-                    for (int i = 0; i < d.Count; i++)
-                    {
-                        using (StreamWriter sw = new StreamWriter(helpFilePaths[i], true))
-                        {
-                            while (d[i] > 0 && currentIndex < input.Count)
-                            {
-                                int seriesStartIndex = currentIndex;
 
+            while (d.Any(x => x > 0) && currentIndex < input.Count)
+            {
+                for (int i = 0; i < d.Count; i++)
+                {
+                    using (StreamWriter sw = new StreamWriter(helpFilePaths[i], true))
+                    {
+                        while (d[i] > 0 && currentIndex < input.Count)
+                        {
+                            int seriesStartIndex = currentIndex;
+
+                            if (ascending)
+                            {
                                 while (currentIndex < input.Count - 1 && input[currentIndex] <= input[currentIndex + 1])
                                 {
                                     currentIndex++;
                                 }
+                            }
+                            else
+                            {
+                                while (currentIndex < input.Count - 1 && input[currentIndex] >= input[currentIndex + 1])
+                                {
+                                    currentIndex++;
+                                }
+                            }
 
+                            if (ascending)
+                            {
                                 for (int j = seriesStartIndex; j <= currentIndex; j++)
                                 {
                                     sw.WriteLine(input[j]);
-                                    diskAccessCount++;
-                                }
-
-                                currentIndex++;
-                                d[i]--;
-
-                                for (int k = 0; k < d.Count; k++)
-                                {
-                                    fictionalSeries.Add(d[k]);
                                 }
                             }
-
-                            if (d[i] == 0 && i == d.Count - 1)
+                            else
                             {
-                                d = SeriesCounter(a);
-                                a = GetPerfectSequence(a);
+                                for (int j = currentIndex; j >= seriesStartIndex; j--)
+                                {
+                                    sw.WriteLine(input[j]);
+                                }
                             }
+
+                            currentIndex++;
+                            d[i]--;
+
+                            for (int k = 0; k < d.Count; k++)
+                            {
+                                fictionalSeries.Add(d[k]);
+                            }
+                        }
+
+                        if (d[i] == 0 && i == d.Count - 1)
+                        {
+                            d = SeriesCounter(a);
+                            a = GetPerfectSequence(a);
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            
+            
 
+            
             int countToRemove = fictionalSeries.Count - 4;
             if (countToRemove > 0)
             {
@@ -169,7 +176,7 @@ namespace Kyrsova
 
         public void MergeSeriesUntilOneRemains(string mainPath, string[] helpFilePath, bool ascending)
         {
-            List<int> fictionalSeries = GetDistributedSeries(mainPath, helpFilePath);
+            List<int> fictionalSeries = GetDistributedSeries(mainPath, helpFilePath, ascending);
             
             int minFictionalSeries = fictionalSeries[0];
             for (int i = 0; i < fictionalSeries.Count-1; i++)

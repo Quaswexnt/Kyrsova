@@ -19,9 +19,6 @@ namespace Kyrsova
         private int[] initialFilePaths;
         private int[] sortedFilePaths;
 
-
-
-
         public Form1()
         {
             InitializeComponent();
@@ -232,7 +229,7 @@ namespace Kyrsova
                         MessageBox.Show($"Значення мінімальної генерації не може бути меньшим за {file.MinBound}!");
                         textBox2.Clear();
                     }
-                    else if (file.UpperBound != 0 && minBound > file.UpperBound) // Проверка на существующую верхнюю границу
+                    else if (file.UpperBound != 0 && minBound > file.UpperBound) 
                     {
                         MessageBox.Show($"Мінімальне значення не може бути більшим за максимальне значення {file.UpperBound}!");
                         textBox2.Clear();

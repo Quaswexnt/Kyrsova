@@ -39,52 +39,46 @@ namespace Kyrsova
 
         public void DivideFile(string filename, string[] helpFilePaths)
         {
-            try
+
+            using (FileStream fileStream = File.OpenRead(filename))
+            using (StreamReader reader = new StreamReader(fileStream))
             {
-                using (FileStream fileStream = File.OpenRead(filename))
-                using (StreamReader reader = new StreamReader(fileStream))
+
+                FileStream[] fileStreams = new FileStream[helpFilePaths.Length];
+                for (int i = 0; i < helpFilePaths.Length; i++)
                 {
-                   
-                    FileStream[] fileStreams = new FileStream[helpFilePaths.Length];
-                    for (int i = 0; i < helpFilePaths.Length; i++)
-                    {
-                        fileStreams[i] = File.OpenWrite(helpFilePaths[i]);
-                        
-                    }
+                    fileStreams[i] = File.OpenWrite(helpFilePaths[i]);
 
-                    string line;
-                    int fileIndex = 0;
-
-                    
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        
-                        byte[] data = Encoding.UTF8.GetBytes(line + Environment.NewLine);
-                        fileStreams[fileIndex].Write(data, 0, data.Length);
-
-                        fileIndex = (fileIndex + 1) % helpFilePaths.Length;
-                        diskAccessCount++;
-                    }
-
-                    
-                    foreach (var stream in fileStreams)
-                    {
-                        stream.Close();  
-                    }
                 }
 
-                
-                if (File.Exists(filename))
-                {
-                    
+                string line;
+                int fileIndex = 0;
 
-                    File.Delete(filename);
+
+                while ((line = reader.ReadLine()) != null)
+                {
+
+                    byte[] data = Encoding.UTF8.GetBytes(line + Environment.NewLine);
+                    fileStreams[fileIndex].Write(data, 0, data.Length);
+
+                    fileIndex = (fileIndex + 1) % helpFilePaths.Length;
                     diskAccessCount++;
                 }
+
+
+                foreach (var stream in fileStreams)
+                {
+                    stream.Close();
+                }
             }
-            catch (Exception ex)
+
+
+            if (File.Exists(filename))
             {
-                Console.WriteLine($"Ошибка при разделении файла: {ex.Message}");
+
+
+                File.Delete(filename);
+                diskAccessCount++;
             }
         }
 
@@ -118,7 +112,6 @@ namespace Kyrsova
                     }
                     
                 }
-                
 
                 if (ascending)
                 {
@@ -144,7 +137,6 @@ namespace Kyrsova
 
             }
         }
-
         public void RealMergeHelpFile(string[] helpFilePath, bool ascending)
         {
             int countFile1 = 0;
@@ -168,8 +160,6 @@ namespace Kyrsova
                     List<int> mergedFile1 = File.ReadAllLines(helpFilePath[countFile1]).Select(int.Parse).ToList();
                     List<int> mergedFile2 = File.ReadAllLines(helpFilePath[countFile2]).Select(int.Parse).ToList();
                     diskAccessCount += 2;
-
-
 
                     List<int> resultMerge = new List<int>();
                     int i = 0;
@@ -205,8 +195,6 @@ namespace Kyrsova
                     File.Delete(helpFilePath[countFile2]);
                     diskAccessCount += 2;
 
-
-
                     using (StreamWriter writer = new StreamWriter(mergedFilePath))
                     {
                         foreach (int value in resultMerge)
@@ -216,12 +204,7 @@ namespace Kyrsova
 
 
                         }
-                        
-
                     }
-                    
-
-
                 }
 
                 countFile1 += 2;

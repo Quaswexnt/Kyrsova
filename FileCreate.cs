@@ -83,7 +83,6 @@ namespace Kyrsova
             }
 
         }
-
         public void GenOrderedUp()
         {
             List<int> array = new List<int>((int)DesireAmount);
@@ -107,7 +106,6 @@ namespace Kyrsova
             }
 
         }
-
         public void GenOrderedDown()
         {
             List<int> array = new List<int>((int)DesireAmount);
@@ -135,6 +133,3 @@ namespace Kyrsova
 
     } 
 }
-
-   
- 

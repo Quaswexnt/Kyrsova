@@ -15,7 +15,6 @@ namespace Kyrsova
         public string finalPath;
         public int complexity;
 
-
         public void PolyPhaseSort(bool acsending)
         {
             PolyPhase poly = new PolyPhase();
@@ -54,10 +53,6 @@ namespace Kyrsova
             complexity = multiway.DiskAccessCount;
         }
 
-
-
-
-
         public void NaturalSort(bool acsending)
         {
 
@@ -85,10 +80,3 @@ namespace Kyrsova
         }
     }
 }
-
-            
-
-        
-    
-
-        

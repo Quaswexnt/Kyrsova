@@ -18,13 +18,13 @@
                 if (changedCheckBox.Checked)
                 {
                     ExecuteOnlyOne(capture);
-                    CurrentAction = actions[capture]; // Сохраняем действие, соответствующее активному чекбоксу
+                    CurrentAction = actions[capture]; 
                 }
                 else
                 {
                     if (CurrentAction == actions[capture])
                     {
-                        CurrentAction = null; // Если чекбокс был отключен, сбрасываем текущее действие
+                        CurrentAction = null; 
                     }
                 }
             };
