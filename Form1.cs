@@ -72,12 +72,8 @@ namespace Kyrsova
                        .Select(int.Parse)
                        .ToArray();
 
-
-
-
                 }
             };
-
 
             checkBoxGroupManager = new CheckBoxGroupManager(actions, checkBox4, checkBox5, checkBox6);
 
