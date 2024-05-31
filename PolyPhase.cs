@@ -81,6 +81,7 @@ namespace Kyrsova
             try
             {
                 var fileContent = File.ReadAllLines(mainPath);
+                diskAccessCount++;
                 foreach (var line in fileContent)
                 {
                     if (int.TryParse(line, out int number))
@@ -97,6 +98,7 @@ namespace Kyrsova
             try
             {
                 File.Delete(mainPath);
+                diskAccessCount++;
             }
             catch (Exception ex)
             {
@@ -134,6 +136,7 @@ namespace Kyrsova
                                 for (int j = seriesStartIndex; j <= currentIndex; j++)
                                 {
                                     sw.WriteLine(input[j]);
+                                    diskAccessCount++;
                                 }
                             }
                             else
@@ -141,6 +144,7 @@ namespace Kyrsova
                                 for (int j = currentIndex; j >= seriesStartIndex; j--)
                                 {
                                     sw.WriteLine(input[j]);
+                                    diskAccessCount++;
                                 }
                             }
 
