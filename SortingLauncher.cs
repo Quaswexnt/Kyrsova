@@ -24,6 +24,7 @@ namespace Kyrsova
             poly.MergeSeriesUntilOneRemains(@"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\myFile.txt", pathHelp,acsending);
             string[] localDirectory = Directory.GetFiles(@"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\");
             finalPath = localDirectory[0];
+            complexity++;
 
             complexity = poly.DiskAccessCount;
 
@@ -44,8 +45,9 @@ namespace Kyrsova
 
                 multiway.SortHelpFiles(helpReloadPaths, acsending );
                 multiway.RealMergeHelpFile(helpReloadPaths, acsending);
-
+                
                 localDirectory = Directory.GetFiles(@"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\");
+                complexity++;
             }
             finalPath = localDirectory[0];
 
@@ -72,10 +74,13 @@ namespace Kyrsova
 
                 natural.GetDividedFiles(@"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\myFile.txt", pathHelp, acsending);
                 natural.GetMergedSeries(pathHelp, @"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\myFile.txt",acsending);
-
+                
                 localDirectory = Directory.GetFiles(@"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\");
+                complexity++;
+                
             }
             complexity = natural.DiskAccessCount;
+           
 
         }
     }

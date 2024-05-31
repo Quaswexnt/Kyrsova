@@ -27,11 +27,9 @@ namespace Kyrsova
                  string fileName = $"helpFile{i + 1}.txt";
                  string _filePath = Path.Combine(helpDirectoryPath, fileName);
                  using (FileStream fileStream = File.Create(_filePath)) { }
-                 diskAccessCount++;
-
-
-
+                diskAccessCount++;
                 filePaths[i] = _filePath;
+                
             }
             
             
@@ -40,20 +38,21 @@ namespace Kyrsova
         }
         public void GetDividedFiles(string mainFile, string[] helpFilePath, bool descending)
         {
+            
             using (StreamWriter writer1 = new StreamWriter(helpFilePath[0]))
             using (StreamWriter writer2 = new StreamWriter(helpFilePath[1]))
             using (StreamReader reader = new StreamReader(mainFile))
             {
-               
+                diskAccessCount += 3;
+
                 bool addToFirstArray = false;
                 int? previousNumber = null;
-
+                
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine();
-                    diskAccessCount++;
 
-
+                    
                     if (int.TryParse(line, out int currentNumber))
                     {
                         if (previousNumber.HasValue)
@@ -63,12 +62,12 @@ namespace Kyrsova
                                 if (addToFirstArray)
                                 {
                                     writer1.WriteLine(previousNumber.Value);
-                                    diskAccessCount++;
+                                    
                                 }
                                 else
                                 {
                                     writer2.WriteLine(previousNumber.Value);
-                                    diskAccessCount++;
+                                    
                                 }
                                 
                             }
@@ -98,7 +97,7 @@ namespace Kyrsova
                     if (addToFirstArray)
                     {
                         writer1.WriteLine(previousNumber.Value);
-                        
+                       
                     }
                     else
                     {
@@ -108,15 +107,13 @@ namespace Kyrsova
                     
                 }
             }
-
+            
             File.WriteAllText(mainFile, string.Empty);
             diskAccessCount++;
-
-
         }
-
         public void GetMergedSeries(string[] helpFilePath, string mainFile, bool descending)
         {
+            
             List<int> mergedFile1 = File.ReadAllLines(helpFilePath[0]).Select(int.Parse).ToList();
             List<int> mergedFile2 = File.ReadAllLines(helpFilePath[1]).Select(int.Parse).ToList();
             diskAccessCount += 2;
@@ -171,13 +168,15 @@ namespace Kyrsova
                 foreach (int item in resMerged)
                 {
                     writer.WriteLine(item);
+
                     diskAccessCount++;
-
-
                 }
-            }
-        }
+               
 
+
+            }
+            
+        }
         public List<int> MergeSeries(List<int> arr1, List<int> arr2, bool descending)
         {
             List<int> result = new List<int>();
@@ -219,7 +218,6 @@ namespace Kyrsova
                 File.Delete(path[0]);
                 File.Delete(path[1]);
                 diskAccessCount += 2;
-
             }
         }
     }

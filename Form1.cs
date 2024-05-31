@@ -35,7 +35,6 @@ namespace Kyrsova
         }
         private void InitializeCheckBoxGroupManager()
         {
-            // Устанавливаем действия для каждого чекбокса
             Action[] actions = new Action[]
             {
                 () =>
@@ -65,6 +64,7 @@ namespace Kyrsova
                 },
                 ()=>
                 {
+
                     ClearDirectory(@"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\", @"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\tempFiles\");
                     file.GetFilePath = @"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\myFile.txt";
                     file.CreateFile();
@@ -76,6 +76,8 @@ namespace Kyrsova
                        .ToArray();
 
 
+
+
                 }
             };
 
@@ -85,31 +87,54 @@ namespace Kyrsova
             Action[] sortActions = new Action[]
                 {
                     () =>
-                    {
+                    {   if(file.DesireAmount>0)
+                        {
                         launcher.NaturalSort(isAscending);
                         File.Copy(file.GetFilePath,@"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\tempFiles\outPutFile.txt");
                         sortedFilePaths = File.ReadLines(file.GetFilePath)
                                           .Take(300)
                                           .Select(int.Parse)
                                           .ToArray();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Розмір файлу не встановлений !");
+                        }
+
                     },
                     ()=>
                     {
-                        launcher.MultiWaySort(isAscending);
-                        File.Copy(launcher.finalPath,@"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\tempFiles\outPutFile.txt");
-                        sortedFilePaths = File.ReadLines(launcher.finalPath)
-                                          .Take(300)
-                                          .Select(int.Parse)
-                                          .ToArray();
+                        if(file.DesireAmount>0)
+                        {
+                            launcher.MultiWaySort(isAscending);
+                            File.Copy(launcher.finalPath,@"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\tempFiles\outPutFile.txt");
+                            sortedFilePaths = File.ReadLines(launcher.finalPath)
+                                              .Take(300)
+                                              .Select(int.Parse)
+                                              .ToArray();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Розмір файлу не встановлений !");
+                        }
                     },
                     ()=>
                     {
-                        launcher.PolyPhaseSort(isAscending);
-                        File.Copy(launcher.finalPath,@"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\tempFiles\outPutFile.txt");
-                        sortedFilePaths = File.ReadLines(launcher.finalPath)
-                                          .Take(300)
-                                          .Select(int.Parse)
-                                          .ToArray();
+
+
+                        if (file.DesireAmount > 0)
+                        {
+                            launcher.PolyPhaseSort(isAscending);
+                            File.Copy(launcher.finalPath,@"C:\Users\nnhf2\Desktop\Курсова робота\Файлы\tempFiles\outPutFile.txt");
+                            sortedFilePaths = File.ReadLines(launcher.finalPath)
+                                              .Take(300)
+                                              .Select(int.Parse)
+                                              .ToArray();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Розмір файлу не встановлений !");
+                        }
                     }
                 };
 
@@ -138,13 +163,15 @@ namespace Kyrsova
         }
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            
+
             if (e.KeyCode == Keys.Enter)
             {
                 if (string.IsNullOrWhiteSpace(textBox1.Text))
                 {
-                    MessageBox.Show("Будь ласка, введіть розмір файлу!");
+                    
                     textBox1.Clear();
+                    file.DesireAmount = 0;
+                    e.SuppressKeyPress = true;
                     return;
                 }
 
@@ -186,12 +213,12 @@ namespace Kyrsova
             {
                 if (string.IsNullOrWhiteSpace(textBox2.Text))
                 {
-                    MessageBox.Show("Будь ласка введіть значення мінімальної межі генерації!");
+                   
                     textBox2.Clear();
+                    file.LowerBound = 0;
+                    e.SuppressKeyPress = true;
                     return;
                 }
-
-
 
                 if (textBox2.Text == "-")
                 {
@@ -203,6 +230,11 @@ namespace Kyrsova
                     if (minBound < file.MinBound)
                     {
                         MessageBox.Show($"Значення мінімальної генерації не може бути меньшим за {file.MinBound}!");
+                        textBox2.Clear();
+                    }
+                    else if (file.UpperBound != 0 && minBound > file.UpperBound) // Проверка на существующую верхнюю границу
+                    {
+                        MessageBox.Show($"Мінімальне значення не може бути більшим за максимальне значення {file.UpperBound}!");
                         textBox2.Clear();
                     }
                     else
@@ -227,13 +259,11 @@ namespace Kyrsova
 
                 if (string.IsNullOrWhiteSpace(textBox3.Text))
                 {
-                    MessageBox.Show("Будь ласка введіть значення максимальної межі генерації!");
                     textBox3.Clear();
+                    file.UpperBound = 0;
+                    e.SuppressKeyPress = true;
                     return;
                 }
-
-
-
                 if (textBox3.Text == "-")
                 {
                     return;
@@ -241,14 +271,14 @@ namespace Kyrsova
 
                 if (int.TryParse(textBox3.Text, out int maxBound))
                 {
-                    if (maxBound < file.LowerBound)
+                    if (file.LowerBound != 0 && maxBound <= file.LowerBound)
                     {
-                        MessageBox.Show($"Значення максимальної генерації не може бути меньшим за {file.LowerBound}! ");
+                        MessageBox.Show($"Значення максимальної генерації не може бути меньшим за {file.LowerBound}!");
                         textBox3.Clear();
                     }
                     else if (maxBound > file.MaxBound)
                     {
-                        MessageBox.Show($"Значення максимальної генерації не може бути більшим за {file.MaxBound}! ");
+                        MessageBox.Show($"Значення максимальної генерації не може бути більшим за {file.MaxBound}!");
                         textBox3.Clear();
                     }
                     else
@@ -325,7 +355,14 @@ namespace Kyrsova
                 return;
             }
 
-           
+            if (file.LowerBound == 0 || file.UpperBound == 0)
+            {
+                MessageBox.Show("Будь ласка, встановіть обидві границі генерації даних!");
+                return;
+            }
+
+
+
             checkBoxGroupManager.CurrentAction();
             checkBoxGroupManager2.CurrentAction();
             UpdateDiskOperations();
@@ -379,13 +416,13 @@ namespace Kyrsova
 
         private void UpdateDiskOperations()
         {
-            
+
             if (launcher.complexity > 0)
             {
-                
+
                 label14.Text = $"{launcher.complexity}";
             }
-            
+
         }
 
         private void label13_Click(object sender, EventArgs e)
@@ -397,5 +434,6 @@ namespace Kyrsova
         {
 
         }
+
     }
 }

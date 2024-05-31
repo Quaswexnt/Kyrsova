@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CheckBoxGroupManager">
+    <Position X="7" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAIAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>CheckBoxGroupManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyrsova.FileOperation" Collapsed="true">
+    <Position X="0.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAiAAAAAgMABAIDAAQKAIAAAAEAAAABAgAAAAIAAgA=</HashCode>
+      <FileName>FileCreate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyrsova.NaturalMerge" Collapsed="true">
+    <Position X="0.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>hAAAAAIAAAAAIAAAAAAAAAAAAAAIAAAAAEAAAQAAAAU=</HashCode>
+      <FileName>NaturalMerge.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyrsova.SortingLauncher" Collapsed="true">
+    <Position X="0.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAQAAAIAE=</HashCode>
+      <FileName>SortingLauncher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyrsova.Program" Collapsed="true">
+    <Position X="0.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyrsova.PolyPhase" Collapsed="true">
+    <Position X="0.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAQAAAQAEAAACAAAQAAAAAAASADEAE=</HashCode>
+      <FileName>PolyPhase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyrsova.MultiWay" Collapsed="true">
+    <Position X="0.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAQAAAAAAAAQQAAAAAACAAAAAAAAQAQAAAAE=</HashCode>
+      <FileName>MultiWay.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Kyrsova.Form1">
+    <Position X="4.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>8SAAAAQIACAAEBEADACMAgBiCAA4CAAgFHwEAAEAAAA=</HashCode>
+      <FileName>Form1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

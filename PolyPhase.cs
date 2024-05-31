@@ -81,7 +81,7 @@ namespace Kyrsova
 
             try
             {
-                var fileContent = File.ReadAllLines(mainPath);
+                string[] fileContent = File.ReadAllLines(mainPath);
                 diskAccessCount++;
                 foreach (var line in fileContent)
                 {
@@ -170,14 +170,20 @@ namespace Kyrsova
         public void MergeSeriesUntilOneRemains(string mainPath, string[] helpFilePath, bool ascending)
         {
             List<int> fictionalSeries = GetDistributedSeries(mainPath, helpFilePath);
+            
             int minFictionalSeries = fictionalSeries[0];
-            for (int i = 0; i < fictionalSeries.Count; i++)
+            for (int i = 0; i < fictionalSeries.Count-1; i++)
             {
                 if (minFictionalSeries > fictionalSeries[i])
                 {
                     minFictionalSeries = fictionalSeries[i];
                 }
             }
+            for (int i = 0; i < fictionalSeries.Count - 1; i++)
+            {
+                fictionalSeries[i] -= minFictionalSeries;
+            }
+
 
             while (helpFilePath.Count(f => new FileInfo(f).Length > 0) > 1)
             {

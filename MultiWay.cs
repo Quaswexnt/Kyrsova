@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Kyrsova
 {
     public class MultiWay
     {
-        private int fileAmountMult = 16;
-        private string? finalPath;
+        private int fileAmountMult = 10;
+        private string finalPath;
 
         private int diskAccessCount = 0;
-        public int DiskAccessCount { get { return diskAccessCount; }  }
+        public int DiskAccessCount { get { return diskAccessCount; } }
 
         public int ReadAmount { get { return fileAmountMult; } }
 
@@ -19,23 +20,20 @@ namespace Kyrsova
         {
             string[] filePaths = new string[ReadAmount];
 
-            try
-            {
-                for (int i = 0; i < ReadAmount; i++)
-                {
-                    string fileName = $"helpFile{i + 1}.txt";
-                    string _filePath = Path.Combine(helpDirectoryPath, fileName);
-                    using (FileStream fileStream = File.Create(_filePath)) { }
-                    diskAccessCount++;
 
-                    filePaths[i] = _filePath;
-                    
-                }
-            }
-            catch (Exception ex)
+            for (int i = 0; i < ReadAmount; i++)
             {
+                string fileName = $"helpFile{i + 1}.txt";
+                string _filePath = Path.Combine(helpDirectoryPath, fileName);
+                using (FileStream fileStream = File.Create(_filePath)) { diskAccessCount++; }
                 
+
+                filePaths[i] = _filePath;
+               
+
             }
+
+
             return filePaths;
         }
 
@@ -44,39 +42,53 @@ namespace Kyrsova
             try
             {
                 using (FileStream fileStream = File.OpenRead(filename))
+                using (StreamReader reader = new StreamReader(fileStream))
                 {
-                    long divisionRank = fileStream.Length / ReadAmount;
-                    byte[] buffer = new byte[divisionRank];
-                    int bytesRead;
-
-                    int helpFileIndex = 0;
-
-                    while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) > 0)
+                   
+                    FileStream[] fileStreams = new FileStream[helpFilePaths.Length];
+                    for (int i = 0; i < helpFilePaths.Length; i++)
                     {
-                        using (FileStream writer = File.OpenWrite(helpFilePaths[helpFileIndex]))
-                        {
-                            if (buffer != null)
-                            {
-                                writer.Write(buffer, 0, bytesRead);
-                            }
-                        }
+                        fileStreams[i] = File.OpenWrite(helpFilePaths[i]);
                         
-                        helpFileIndex = (helpFileIndex + 1) % ReadAmount;
+                    }
+
+                    string line;
+                    int fileIndex = 0;
+
+                    
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        
+                        byte[] data = Encoding.UTF8.GetBytes(line + Environment.NewLine);
+                        fileStreams[fileIndex].Write(data, 0, data.Length);
+
+                        fileIndex = (fileIndex + 1) % helpFilePaths.Length;
+                        diskAccessCount++;
+                    }
+
+                    
+                    foreach (var stream in fileStreams)
+                    {
+                        stream.Close();  
                     }
                 }
 
+                
                 if (File.Exists(filename))
                 {
+                    
+
                     File.Delete(filename);
                     diskAccessCount++;
-
                 }
             }
             catch (Exception ex)
             {
-                
+                Console.WriteLine($"Ошибка при разделении файла: {ex.Message}");
             }
         }
+
+
 
         public void SortHelpFiles(string[] helpFilePaths, bool ascending)
         {
@@ -86,10 +98,12 @@ namespace Kyrsova
 
                 using (StreamReader reader = new StreamReader(filePath))
                 {
+                    diskAccessCount++;
                     string line;
+                    
                     while ((line = reader.ReadLine()) != null)
                     {
-                        diskAccessCount++;
+                        
                         if (string.IsNullOrWhiteSpace(line))
                         {
                             continue;
@@ -102,7 +116,9 @@ namespace Kyrsova
 
                        
                     }
+                    
                 }
+                
 
                 if (ascending)
                 {
@@ -119,11 +135,13 @@ namespace Kyrsova
                     foreach (int number in numbers)
                     {
                         writer.WriteLine(number);
-                        diskAccessCount++;
+                        
 
                     }
+                    
                 }
-                
+                diskAccessCount++;
+
             }
         }
 
@@ -149,8 +167,9 @@ namespace Kyrsova
 
                     List<int> mergedFile1 = File.ReadAllLines(helpFilePath[countFile1]).Select(int.Parse).ToList();
                     List<int> mergedFile2 = File.ReadAllLines(helpFilePath[countFile2]).Select(int.Parse).ToList();
-                    diskAccessCount+=2;
-                    
+                    diskAccessCount += 2;
+
+
 
                     List<int> resultMerge = new List<int>();
                     int i = 0;
@@ -182,22 +201,27 @@ namespace Kyrsova
                     }
 
                     File.Delete(helpFilePath[countFile1]);
-                    diskAccessCount++;
+                    
                     File.Delete(helpFilePath[countFile2]);
-                    diskAccessCount++;
-                    ;
+                    diskAccessCount += 2;
+
+
 
                     using (StreamWriter writer = new StreamWriter(mergedFilePath))
                     {
                         foreach (int value in resultMerge)
                         {
                             writer.WriteLine(value);
-                            diskAccessCount++;
+                            
+
 
                         }
-                    }
+                        
 
+                    }
                     
+
+
                 }
 
                 countFile1 += 2;
