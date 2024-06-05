@@ -15,6 +15,7 @@ namespace Kyrsova
         private CheckBoxGroupManager checkBoxGroupManager;
         private CheckBoxGroupManager checkBoxGroupManager2;
         private bool isAscending = true;
+        bool generationRules = true;
 
         private int[] initialFilePaths;
         private int[] sortedFilePaths;
@@ -161,7 +162,7 @@ namespace Kyrsova
             {
                 if (string.IsNullOrWhiteSpace(textBox1.Text))
                 {
-                    
+
                     textBox1.Clear();
                     file.DesireAmount = 0;
                     e.SuppressKeyPress = true;
@@ -206,7 +207,7 @@ namespace Kyrsova
             {
                 if (string.IsNullOrWhiteSpace(textBox2.Text))
                 {
-                   
+
                     textBox2.Clear();
                     file.LowerBound = 0;
                     e.SuppressKeyPress = true;
@@ -225,7 +226,12 @@ namespace Kyrsova
                         MessageBox.Show($"Значення мінімальної генерації не може бути меньшим за {file.MinBound}!");
                         textBox2.Clear();
                     }
-                    else if (file.UpperBound != 0 && minBound > file.UpperBound) 
+                    if (minBound > file.MaxBound)
+                    {
+                        MessageBox.Show($"Значення мінімальної генерації не може бути більшим за {file.MaxBound}!");
+                        textBox2.Clear();
+                    }
+                    else if (file.UpperBound != 0 && minBound > file.UpperBound)
                     {
                         MessageBox.Show($"Мінімальне значення не може бути більшим за максимальне значення {file.UpperBound}!");
                         textBox2.Clear();
@@ -264,6 +270,11 @@ namespace Kyrsova
 
                 if (int.TryParse(textBox3.Text, out int maxBound))
                 {
+                    if (maxBound < file.MinBound)
+                    {
+                        MessageBox.Show($"Значення максимальної генерації не може бути меньшим за {file.MinBound}!");
+                        textBox3.Clear();
+                    }
                     if (file.LowerBound != 0 && maxBound <= file.LowerBound)
                     {
                         MessageBox.Show($"Значення максимальної генерації не може бути меньшим за {file.LowerBound}!");
@@ -340,6 +351,27 @@ namespace Kyrsova
                 MessageBox.Show("Будь ласка оберіть варіант створення файлу!");
                 return;
             }
+            else
+            {
+                if (checkBox4.Checked) 
+                {
+                    if (file.DesireAmount > (file.UpperBound - file.LowerBound))
+                    {
+                        MessageBox.Show("Генерація неможлива через неможливість заповенння файлу значеннями без дублікатів!");
+                        return;
+                    }
+                    
+                }
+                else if (checkBox5.Checked)
+                {
+                    if (file.DesireAmount > (file.UpperBound - file.LowerBound))
+                    {
+                        MessageBox.Show("Генерація неможлива через неможливість заповнення файлу значеннями без дублікатів!");
+                        return;
+                    }
+                }
+            }
+            
 
 
             if (checkBoxGroupManager2.CurrentAction == null)
@@ -353,6 +385,9 @@ namespace Kyrsova
                 MessageBox.Show("Будь ласка, встановіть обидві границі генерації даних!");
                 return;
             }
+            
+            
+            
 
 
 
@@ -428,5 +463,9 @@ namespace Kyrsova
 
         }
 
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

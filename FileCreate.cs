@@ -8,6 +8,7 @@ using System.IO.Enumeration;
 using System.Runtime.CompilerServices;
 using System.Diagnostics.Tracing;
 using System.Security.Cryptography;
+using System.Drawing;
 
 namespace Kyrsova
 {
@@ -21,8 +22,8 @@ namespace Kyrsova
 
         private int upperBound;
         private long maxAmount = 150000000;
-        private int maxBound = 10000;
-        private int minBound = -10000;
+        private int maxBound = 1000000;
+        private int minBound = -1000000;
 
         public int MaxBound { get => maxBound; }
         public int MinBound { get => minBound; }
@@ -85,49 +86,47 @@ namespace Kyrsova
         }
         public void GenOrderedUp()
         {
-            List<int> array = new List<int>((int)DesireAmount);
+            Random rand = new Random();
 
+            
+            double step = (double)(UpperBound - LowerBound) / DesireAmount;
 
-            Random random = new Random();
-            for (int i = 0; i < DesireAmount; i++)
+            using (StreamWriter writer = new StreamWriter(_filePath))
             {
-                array.Add(random.Next(LowerBound, UpperBound));
-            }
-            array.Sort();
+                
+                int previous = rand.Next(LowerBound, LowerBound + (int)step + 1);
+                writer.WriteLine(previous);
 
-            using (StreamWriter writter = new StreamWriter(_filePath))
-            {
-                for (int i = 0; i < array.Count; i++)
+                for (int i = 1; i < DesireAmount; i++)
                 {
+                   
+                    int nextMin = previous + 1;
+                    int nextMax = Math.Min(UpperBound, previous + (int)step + 1);
 
-                    writter.WriteLine(array[i]);
-
+                    previous = rand.Next(nextMin, nextMax);
+                    writer.WriteLine(previous);
                 }
             }
-
         }
         public void GenOrderedDown()
         {
-            List<int> array = new List<int>((int)DesireAmount);
+            Random rand = new Random();
+            double step = (double)(UpperBound - LowerBound) / DesireAmount;
 
+            using (StreamWriter writer = new StreamWriter(_filePath))
+            {
+                int previous = rand.Next(UpperBound - (int)step, UpperBound + 1);
+                writer.WriteLine(previous);
 
-            Random random = new Random();
-            for (int i = 0; i < DesireAmount; i++)
-            {
-                array.Add(random.Next(LowerBound, UpperBound));
-            }
-            array.Sort();
-            array.Reverse();
-            using (StreamWriter writter = new StreamWriter(_filePath))
-            {
-                for (int i = 0; i < array.Count; i++)
+                for (int i = 1; i < DesireAmount; i++)
                 {
+                    int nextMax = previous - 1;
+                    int nextMin = Math.Max(LowerBound, previous - (int)step);
 
-                    writter.WriteLine(array[i]);
-
+                    previous = rand.Next(nextMin, nextMax + 1);
+                    writer.WriteLine(previous);
                 }
             }
-
         }
 
 
